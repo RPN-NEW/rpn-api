@@ -15,5 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/create-article', [AdminController::class, 'createArticle']);
-Route::get('/article', [AdminController::class, 'showArticle']);
+Route::delete('/article/{id}', [AdminController::class, 'delete']);
+Route::put('/article/{id}', [AdminController::class, 'update']);
+Route::post('/article', [AdminController::class, 'create']);
+Route::get('/article', [AdminController::class, 'getAll']);

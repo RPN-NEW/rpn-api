@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
-    public function createArticle(Request $request)
+    public function create(Request $request)
     {
         try {
             $request->validate([
@@ -28,7 +28,49 @@ class AdminController extends Controller
         }
     }
 
-    public function showArticle()
+    public function update(Request $request)
+    {
+        try {
+            $request->validate([
+                'title' => 'required|max:1000',
+                'description' => 'required',
+                'author' => 'max:200'
+            ]);
+
+            Article::where('id', $request->id)->update([
+                "title" => $request->input("title"),
+                "description" => $request->input("description"),
+                "author" => $request->input("author"),
+            ]);
+
+            return response()->json([
+                "message" => "Article updated"
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to update article' . $e->getMessage()
+            ], 404);
+        }
+    }
+
+    public function delete(Request $request)
+    {
+        try {
+            $article = Article::find($request->id);
+            $article->delete();
+
+            return response()->json([
+                "message" => "Article deleted",
+                "data" => $article
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to delete article' . $e->getMessage()
+            ], 404);
+        }
+    }
+
+    public function getAll()
     {
         $article = Article::all();
         return response()->json(['article' => $article], 200);
